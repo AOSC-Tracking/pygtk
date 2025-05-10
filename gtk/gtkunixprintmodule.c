@@ -29,6 +29,10 @@
 #include <gtk/gtk.h>
 #include <gtk/gtkunixprint.h>
 
+#ifndef DL_EXPORT
+#define DL_EXPORT(t) __attribute__((__visibility__("default"))) t
+#endif
+
 # include <pycairo.h>
 Pycairo_CAPI_t *Pycairo_CAPI;
  
@@ -45,7 +49,11 @@ initgtkunixprint(void)
     d = PyModule_GetDict(m);
 
     init_pygobject();
+#if PY_VERSION_HEX < 0x03000000
     Pycairo_IMPORT;
+#else
+    Pycairo_CAPI = (Pycairo_CAPI_t*) PyCObject_Import("cairo", "CAPI");
+#endif
     init_pygtk();
 
     pygtkunixprint_register_classes(d);

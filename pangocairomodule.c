@@ -28,6 +28,10 @@
 #include <pango/pangocairo.h>
 #include <pycairo.h>
 
+#ifndef DL_EXPORT
+#define DL_EXPORT(t) __attribute__((__visibility__("default"))) t
+#endif
+
 /* include any extra headers needed here */
 
 void pypangocairo_register_classes(PyObject *d);

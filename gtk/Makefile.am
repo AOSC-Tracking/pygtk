@@ -6,6 +6,7 @@ CLEANFILES =
 EXTRA_DIST = 
 INCLUDES = \
 	$(PYTHON_INCLUDES) \
+	-I/usr/include/python$(PYTHON_VERSION) \
 	$(PYGOBJECT_CFLAGS) \
 	-I$(srcdir)/gtk
 

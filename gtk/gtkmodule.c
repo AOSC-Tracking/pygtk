@@ -34,6 +34,10 @@
 Pycairo_CAPI_t *Pycairo_CAPI;
 #endif
 
+#ifndef DL_EXPORT
+#define DL_EXPORT(t) __attribute__((__visibility__("default"))) t
+#endif
+
 void _pygtk_register_boxed_types(PyObject *moddict);
 void pygtk_register_classes(PyObject *d);
 void pygdk_register_classes(PyObject *d);

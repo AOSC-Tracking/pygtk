@@ -27,6 +27,10 @@
 /* include this first, before NO_IMPORT_PYGOBJECT is defined */
 #include <pygobject.h>
 
+#ifndef DL_EXPORT
+#define DL_EXPORT(t) __attribute__((__visibility__("default"))) t
+#endif
+
 void pyatk_register_classes (PyObject *d);
 void pyatk_add_constants(PyObject *module, const gchar *strip_prefix);
 void _pyatk_register_boxed_types(void);	

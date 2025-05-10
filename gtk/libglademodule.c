@@ -28,6 +28,10 @@
 #include "pygtk.h"
 #include <glade/glade.h>
 
+#ifndef DL_EXPORT
+#define DL_EXPORT(t) __attribute__((__visibility__("default"))) t
+#endif
+
 void pylibglade_register_classes(PyObject *d);
 extern PyMethodDef pylibglade_functions[];
 

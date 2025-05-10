@@ -75,14 +75,13 @@ AC_PROG_LIBTOOL
 dnl when using libtool 2.x create libtool early, because it's used in configure
 m4_ifdef([LT_OUTPUT], [LT_OUTPUT])
 
-AM_PATH_PYTHON(2.3.5)
-
-AM_CHECK_PYTHON_HEADERS(,[AC_MSG_ERROR(could not find Python headers)])
+AM_PATH_PYTHON(3.10)
 
 AC_MSG_CHECKING([for PySignal_SetWakeupFd in Python.h])
 py_prefix=`$PYTHON -c "import sys; print sys.prefix"`
 old_CPPFLAGS=$CPPFLAGS
-CPPFLAGS="-Wall -Werror $PYTHON_INCLUDES"
+CPPFLAGS="-Wall -Werror -fpermissive $PYTHON_INCLUDES -I/usr/include/python${PYTHON_VERSION}"
+AC_SUBST(PYTHON_VERSION)
 AC_TRY_COMPILE([#include <Python.h>],
   [PySignal_SetWakeupFd(0);],
   setwakeupfd_ok=yes,
@@ -97,8 +96,6 @@ CPPFLAGS=$old_CPPFLAGS
 AC_ARG_ENABLE(thread,
   AC_HELP_STRING([--disable-thread], [Disable pygtk threading support]),,
   enable_thread=yes)
-
-AM_CHECK_PYMOD(thread,,,enable_thread=no)
 
 dnl Building documentation
 AC_ARG_ENABLE(docs,
@@ -168,7 +165,7 @@ AC_SUBST(PYGOBJECT_PYGDOCS)
 
 dnl atk
 PKG_CHECK_MODULES(ATK, atk >= atk_required_version,
-	have_atk=true, have_atk=false)
+	have_atk=false, have_atk=false)
 AC_SUBST(ATK_CFLAGS)
 AC_SUBST(ATK_LIBS)
 AM_CONDITIONAL(BUILD_ATK, $have_atk)
@@ -178,7 +175,7 @@ fi
 
 dnl pango
 PKG_CHECK_MODULES(PANGO, pango >= pango_required_version,
-	have_pango=true, have_pango=false)
+	have_pango=false, have_pango=false)
 AC_SUBST(PANGO_CFLAGS)
 AC_SUBST(PANGO_LIBS)
 AM_CONDITIONAL(BUILD_PANGO, $have_pango)
@@ -222,7 +219,7 @@ if test "x$have_pycairo" = "xtrue"; then
   PKG_CHECK_MODULES(PANGOCAIRO,
           [pangocairo >= pango_required_version,
            pycairo >= pycairo_required_version],
-	  have_pangocairo=true, have_pangocairo=false)
+	  have_pangocairo=false, have_pangocairo=false)
   if test ! $have_pangocairo
   then
     AC_MSG_RESULT(no)
@@ -472,16 +469,7 @@ fi
 
 dnl add required cflags ...
 if test "x$GCC" = "xyes"; then
-  JH_ADD_CFLAG([-Wall])
-  JH_ADD_CFLAG([-fno-strict-aliasing])
-
-  case $host_os in
-  solaris*)
-    ;;
-  *)
-    JH_ADD_CFLAG([-std=c9x])
-    ;;
-  esac
+  CFLAGS="${CFLAGS} -Wall -fno-strict-aliasing -fpermissive -std=c9x -Wno-implicit-function-declaration"
 fi
 
 

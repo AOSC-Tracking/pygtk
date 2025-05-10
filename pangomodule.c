@@ -27,6 +27,10 @@
 
 #include <pango/pango-font.h>
 
+#ifndef DL_EXPORT
+#define DL_EXPORT(t) __attribute__((__visibility__("default"))) t
+#endif
+
 /* include any extra headers needed here */
 
 void pypango_register_classes(PyObject *d);

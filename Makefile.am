@@ -36,6 +36,7 @@ BUILT_EXTRA_DIST = 		\
 
 INCLUDES = 				\
 	$(PYTHON_INCLUDES) 		\
+	-I/usr/include/python$(PYTHON_VERSION) \
 	$(PYGOBJECT_CFLAGS)		\
 	$(GLIB_CFLAGS)			\
 	-I$(srcdir)/gtk
@@ -111,7 +112,7 @@ endif
 # code generator
 .defs.c:
 	(cd $(srcdir)\
-	 && $(PYTHON) $(CODEGENDIR)/codegen.py \
+	 && $(PYTHON2) $(CODEGENDIR)/codegen.py \
 	    --py_ssize_t-clean \
 	    --register pango-types.defs \
 	    --register atk-types.defs \
