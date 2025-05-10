@@ -200,8 +200,12 @@ init_gtk(void)
     pygtk_add_stock_items(d);
     
     /* extension API */
-    PyDict_SetItemString(d, "_PyGtk_API",
-			 o=PyCObject_FromVoidPtr(&functions, NULL));
+#if PY_VERSION_HEX >= 0x02070000
+    o = PyCapsule_New(&functions, "gtk._gtk._PyGtk_API", NULL);
+#else
+    o = PyCObject_FromVoidPtr(&functions, NULL);
+#endif
+    PyDict_SetItemString(d, "_PyGtk_API", o);
     Py_DECREF(o);
 	
     PyGtkDeprecationWarning = PyErr_NewException("gtk.GtkDeprecationWarning",
